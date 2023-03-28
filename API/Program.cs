@@ -1,3 +1,4 @@
+using API.Controllers;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Infrastructure.Data.SeedData;
@@ -22,6 +23,10 @@ builder.Services.AddDbContext<StoreContext>(opt =>
 });
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+//builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(ProductsController<>));
+//builder.Services.AddScoped(typeof(ProductsController<>), typeof(IGenericRepository<>));
 
 // Build the web application.
 var app = builder.Build();
@@ -33,6 +38,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseStaticFiles();
 
 // Use HTTPS redirection.
 app.UseHttpsRedirection();
