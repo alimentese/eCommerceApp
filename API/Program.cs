@@ -1,5 +1,5 @@
-using API.Controllers;
-using Core.Interfaces;
+using API.Extensions;
+using API.Middlewares;
 using Infrastructure.Data;
 using Infrastructure.Data.SeedData;
 using Microsoft.EntityFrameworkCore;
@@ -12,27 +12,18 @@ var builder = WebApplication.CreateBuilder(args);
 // Add controllers to the dependency injection container.
 builder.Services.AddControllers();
 
-// Add Swagger/OpenAPI services to the dependency injection container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-builder.Services.AddDbContext<StoreContext>(opt =>
-{
-    opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-});
-
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-//builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(ProductsController<>));
-//builder.Services.AddScoped(typeof(ProductsController<>), typeof(IGenericRepository<>));
+builder.Services.AddApplicationServices(builder.Configuration);
 
 // Build the web application.
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 // If the application is in development mode, enable Swagger and Swagger UI.
+
+app.UseMiddleware<ExceptionMiddleware>();
+
+app.UseStatusCodePagesWithReExecute("/errors/{0}");
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
