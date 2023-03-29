@@ -35,6 +35,8 @@ app.UseStaticFiles();
 // Use HTTPS redirection.
 app.UseHttpsRedirection();
 
+app.UseCors("CorsPolicy");
+
 // Use authentication/authorization middleware.
 app.UseAuthorization();
 
