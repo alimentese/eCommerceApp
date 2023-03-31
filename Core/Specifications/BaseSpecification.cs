@@ -10,18 +10,22 @@ namespace Core.Specifications
         // Represents the search criteria for the query.
         public Expression<Func<T, bool>> Criteria { get; }
 
-
+        // Represents the property on which we want to sort the results in ascending order
         public Expression<Func<T, object>> OrderBy { get; private set; }
 
+        // Represents the property on which we want to sort the results in descending order.
         public Expression<Func<T, object>> OrderByDescending { get; private set; }
 
         // Objects and is used to specify navigation properties that should be included in the query.
         public List<Expression<Func<T, object>>> Includes { get; } = new List<Expression<Func<T, object>>>();
 
+        // Represents the number of records to take from the result.
         public int Take { get; private set; }
 
+        // Represents the number of records to skip from the result.
         public int Skip { get; private set; }
 
+        // Represents whether paging is enabled for the query or not.
         public bool IsPagingEnabled { get; private set; }
 
         public BaseSpecification()
@@ -37,7 +41,6 @@ namespace Core.Specifications
         }
 
 
-
         ///<summary>
         /// Allows for additional navigation properties to be added to the query.
         ///</summary>
@@ -45,17 +48,28 @@ namespace Core.Specifications
         {
             Includes.Add(includeExpression);
         }
-          protected void AddOrderBy(Expression<Func<T, object>> orderByExpression)
+
+        ///<summary>
+        /// Specifies the property on which we want to sort the results in ascending order.
+        ///</summary>
+        protected void AddOrderBy(Expression<Func<T, object>> orderByExpression)
         {
             OrderBy = orderByExpression;
         }
 
+        ///<summary>
+        /// Specifies the property on which we want to sort the results in descending order.
+        ///</summary>
         protected void AddOrderByDescending(Expression<Func<T, object>> orderByDescExpression)
         {
             OrderByDescending = orderByDescExpression;
         }
 
-        protected void ApplyPaging(int skip, int take) {
+        ///<summary>
+        /// Applies paging to the query.
+        ///</summary>
+        protected void ApplyPaging(int skip, int take)
+        {
             Skip = skip;
             Take = take;
             IsPagingEnabled = true;

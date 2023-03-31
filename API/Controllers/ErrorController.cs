@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Errors;
+using Core.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers

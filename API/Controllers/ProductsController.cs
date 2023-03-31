@@ -13,20 +13,17 @@ namespace API.Controllers
 {
     public class ProductsController : BaseApiController
     {
-        //private readonly IGenericRepository<TEntity> repository;
         private readonly IGenericRepository<Product> productRepository;
         private readonly IGenericRepository<ProductType> typeRepository;
         private readonly IGenericRepository<ProductBrand> brandRepository;
         private readonly IMapper mapper;
 
-        public ProductsController(IGenericRepository<Product> productRepository,
-        IGenericRepository<ProductType> typeRepository, IGenericRepository<ProductBrand> brandRepository,
-        IMapper mapper)
+        public ProductsController(IGenericRepository<Product> productRepository, IGenericRepository<ProductType> typeRepository, IGenericRepository<ProductBrand> brandRepository, IMapper mapper)
         {
-            this.mapper = mapper;
-            this.brandRepository = brandRepository;
             this.productRepository = productRepository;
             this.typeRepository = typeRepository;
+            this.brandRepository = brandRepository;
+            this.mapper = mapper;
         }
 
 
@@ -82,7 +79,7 @@ namespace API.Controllers
         {
             // return await repository.GetProductByIdAsync(id);
             var spec = new ProductsWithTypesAndBrandsSpecification(id);
-            var product = await productRepository.GetEntityWithSpec(spec);
+            var product = await productRepository.GetByIdAsync(id);
 
             /*
             return Ok(new ProductToReturnDto{
@@ -99,7 +96,8 @@ namespace API.Controllers
             if (product == null)
                 return NotFound(new ApiResponse(404));
 
-            return Ok(mapper.Map<Product, ProductToReturnDto>(product));
+            return Ok(product);
+            //return Ok(mapper.Map<Product, ProductToReturnDto>(product));
         }
 
         

@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Controllers;
 using API.Errors;
+using Core.Entities;
 using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +28,8 @@ namespace API.Extensions
                 opt.UseSqlite(config.GetConnectionString("DefaultConnection"));
             });
 
+       
+            
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -35,6 +39,7 @@ namespace API.Extensions
 
                 options.InvalidModelStateResponseFactory = actionContext =>
                 {
+                    // Retrieve the errors from the ModelState using LINQ where and select clauses, and convert them to an array of error messages
                     var errors = actionContext.ModelState
                     .Where(e => e.Value.Errors.Count > 0)
                     .SelectMany(x => x.Value.Errors)
@@ -44,6 +49,8 @@ namespace API.Extensions
                     {
                         Errors = errors
                     };
+                    
+                    // Return a new BadRequestObjectResult object containing the errorResponse object
                     return new BadRequestObjectResult(errorResponse);
                 };
             });
